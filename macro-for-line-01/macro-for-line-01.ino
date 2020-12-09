@@ -9,11 +9,13 @@
 // Include the Bounce2 library found here :
 // https://github.com/thomasfredericks/Bounce2
 #include <Bounce2.h>
+#include <Encoder.h>
 
-#define butt1 5
-#define butt2 6
-#define butt3 7
-#define butt4 8
+
+#define butt1 8
+#define butt2 9
+#define butt3 10
+#define butt4 11
 
 #define LED1 13
 #define LED2 14
@@ -26,6 +28,10 @@ Bounce deb1 = Bounce();
 Bounce deb2 = Bounce(); 
 Bounce deb3 = Bounce(); 
 Bounce deb4 = Bounce(); 
+
+//encoder
+Encoder myEnc(22, 23);
+long encold  = -999;
 
 void setup() {
   Serial.begin(9600);
@@ -43,10 +49,10 @@ void setup() {
   deb3.interval(5); // interval in ms
   deb4.attach(butt4);
   deb4.interval(5); // interval in ms
-  
+
   //Setup the LED :
-  pinMode(LED1,OUTPUT);
-  pinMode(LED2,OUTPUT);
+  //pinMode(LED1,OUTPUT);
+  //pinMode(LED2,OUTPUT);
 
 }
 
@@ -69,27 +75,16 @@ void loop() {
       oldb[i] = newb[i];
     }
   }
+
+  long encnew = myEnc.read();
+  if (encnew != encold) {
+    encold = encnew;
+    Serial.println(encnew);
+  }
 }
 
 void buttonFunc(int id, int state) {
-  if (state == 0) {  // button state is 0 when pressed
-    if (id == 0){
-      digitalWrite(13, LOW);
-      digitalWrite(14, LOW);
-    }
-    else if(id == 1){
-      digitalWrite(13, HIGH);
-      digitalWrite(14, LOW);
-    }
-    else if(id == 2){
-      digitalWrite(13, LOW);
-      digitalWrite(14, HIGH);
-    }
-    else if(id == 3){
-      digitalWrite(13, HIGH);
-      digitalWrite(14, HIGH);
-    }
-  }
+  
   Serial.print("id: ");
   Serial.print(id);
   Serial.print(" was set to ");
@@ -97,32 +92,41 @@ void buttonFunc(int id, int state) {
 
   if (id == 0) {
     if (state == 0) {
-      Keyboard.press(MODIFIERKEY_CTRL);
-      Keyboard.press(KEY_C);
+      Keyboard.set_modifier(MODIFIERKEY_GUI);
+      Keyboard.send_now();
+      Keyboard.set_key1(KEY_C);
+      Keyboard.send_now();
     }
     if (state == 1) {
-      Keyboard.release(MODIFIERKEY_CTRL);
-      Keyboard.release(KEY_C);
+      Keyboard.set_modifier(0);
+      Keyboard.set_key1(0);
+      Keyboard.send_now();
     }
   }
   else if(id == 1) {
     if (state == 0) {
-      Keyboard.press(MODIFIERKEY_CTRL);
-      Keyboard.press(KEY_V);
+      Keyboard.set_modifier(MODIFIERKEY_GUI);
+      Keyboard.send_now();
+      Keyboard.set_key1(KEY_V);
+      Keyboard.send_now();
     }
     if (state == 1) {
-      Keyboard.release(MODIFIERKEY_CTRL);
-      Keyboard.release(KEY_V);
+      Keyboard.set_modifier(0);
+      Keyboard.set_key1(0);
+      Keyboard.send_now();
     }
   }
   else if(id == 2){
     if (state == 0) {
-      Keyboard.press(MODIFIERKEY_CTRL);
-      Keyboard.press(KEY_Z);
+      Keyboard.set_modifier(MODIFIERKEY_GUI);
+      Keyboard.send_now();
+      Keyboard.set_key1(KEY_Z);
+      Keyboard.send_now();
     }
     if (state == 1) {
-      Keyboard.release(MODIFIERKEY_CTRL);
-      Keyboard.release(KEY_Z);
+      Keyboard.set_modifier(0);
+      Keyboard.set_key1(0);
+      Keyboard.send_now();
     }
   }
   else if(id == 3){
